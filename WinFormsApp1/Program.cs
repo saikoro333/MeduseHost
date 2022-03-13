@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 
 using vJoyInterfaceWrap;
-
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Forms;
-using System.Management;
-using System.IO.Ports;
 
-//using Vortice.XInput;
-//using SharpDX.DirectInput;
+using MessageBox = System.Windows.Forms.MessageBox;
+
+
 
 //https://github.com/dotnet/runtime/issues/28840
 //https://qastack.jp/programming/3331043/get-list-of-connected-usb-devices
@@ -20,300 +16,335 @@ namespace WinFormsApp1
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        /// 
-        static public vJoy joystick;
-        static public vJoy.JoystickState iReport;
-        static public uint id = 1;
+        const int MAX_PLAYER_NUM = 3;
+        static public PlayerController[] players = new PlayerController[MAX_PLAYER_NUM];
+        static int CurrEntryCount = 0;
 
+        static MainFrom f2;
         [STAThread]
         static void Main(string[] args)
         {
-            //ApplicationConfiguration.Initialize();
-            // Application.Run(new Form1());
-            joystick = new vJoy();
-            iReport = new vJoy.JoystickState();
-            Form2 f2 = new Form2();
-            f2.Show();
-            //Task t1 = new Task(f2.Show);
-            //t1.Start();
 
-            /*
-            var dev = DriveInfo.GetDrives();
-            foreach (var d in dev)
-            {
-                MessageBox.Show(d.ToString());
-            }
-            */
-            ManagementObjectCollection collection;
-
-            //SelectQuery q = new SelectQuery(@"Win32_USBHub", @"State='Running'");
-            //using (var searcher = new ManagementObjectSearcher(@"SELECT * FROM Win32_USBHub")) collection = searcher.Get();
-            using (var searcher = new ManagementObjectSearcher(@"SELECT * FROM Win32_PnPEntity where DeviceID Like ""HID%""")) collection = searcher.Get();
-            //using (var searcher = new ManagementObjectSearcher(@"SELECT * FROM Win32_SerialPort")) collection = searcher.Get();
-
-            // 取得したUSBHub情報から、ID情報を取り出し、デバイスリストに追加
-
-            int icnt = 0;
-            string portnum="";
-            foreach (var device in collection)
-            {
-                //MessageBox.Show(device.GetPropertyValue("DeviceID").ToString());
-                //MessageBox.Show(device.GetPropertyValue("Name")+" , " + device.GetPropertyValue("PNPDeviceID"));
-                icnt++;
-                if(icnt == 1)
-                {
-                    portnum = device.GetPropertyValue("DeviceID").ToString();
-                }
-            }
-            collection.Dispose();
-            MessageBox.Show(icnt + "  l   " + portnum);
-
-            //var serialPort = new SerialPort(portnum, 115200, Parity.None, 8, StopBits.One);
-            //serialPort.Open();  // シリアルポートオープン
-
-
+            HostControl hostControl = new HostControl();
+            hostControl.Initial();
+            //f2 = new Form2();
+            //f2.Show();
+     
             // Device ID can only be in the range 1-16
 
+            /*
             if (args.Length > 0 && !String.IsNullOrEmpty(args[0]))
                 id = Convert.ToUInt32(args[0]);
 
+            */
+            //setPlayer();
+            //setupVjoyController();
 
+            //setPreLoop();
+            //InputLoop();
 
+ 
 
+        }
 
-
-
-
-
-
-
-            if (id <= 0 || id > 16)
+        /*static void setPlayer()
+        {
+            for(uint i = 0; i < MAX_PLAYER_NUM; i++)
             {
-                Console.WriteLine("Illegal device ID {0}\nExit!", id);
-                return;
+                players[i] = new PlayerController(i + 1,WiiController.PLATFORM);
+                players[i].joystick = new vJoy();
+            }
+        }
+        */
+        static void setupVjoyController()
+        {
+            for (uint i = 0; i < MAX_PLAYER_NUM; i++)
+            {
+                setupVjoyController(players[i]);
+            }
+        }
+        static void setPreLoop()
+        {
+            for(uint i = 0; i < MAX_PLAYER_NUM; i++)
+            {
+                players[i].preEnterLoop();
+            }
+        }
+
+        static private void InputLoop()
+        {
+            while (true)
+            {
+
+                for (int i = 0; i < MAX_PLAYER_NUM; i++)
+                {
+                    int keyInput = getKeybordInput();
+                    players[i].setButtonInput(keyInput);
+                    setVJoyInput(players[i]);
+                    String str = String.Format("PlayerNum: {0}\r\nInput {1}"
+                        , i + 1, players[i].InputToString());
+                    //f2.setButtonText(i, str);
+
+                }
+                System.Threading.Thread.Sleep(15);
+                System.Windows.Forms.Application.DoEvents();
+            }
+        }
+
+        static private int getKeybordInput()
+        {
+            int key = 0;
+
+            if (Keyboard.IsKeyDown(Key.W) || Keyboard.IsKeyDown(Key.Up))
+            {
+                key |= (int)WiiController.ButtonBit.UP;
+            }
+            if (Keyboard.IsKeyDown(Key.S) || Keyboard.IsKeyDown(Key.Down))
+            {
+                key |= (int)WiiController.ButtonBit.DOWN;
+            }
+            if (Keyboard.IsKeyDown(Key.A) || Keyboard.IsKeyDown(Key.Left))
+            {
+                key |= (int)WiiController.ButtonBit.LEFT;
+            }
+            if (Keyboard.IsKeyDown(Key.D) || Keyboard.IsKeyDown(Key.Right))
+            {
+                key |= (int)WiiController.ButtonBit.RIGHT;
+            }
+            if (Keyboard.IsKeyDown(Key.Space) == true)
+            {
+                key |= (int)WiiController.ButtonBit.TWO;
+            }
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) == true)
+            {
+                key |= (int)WiiController.ButtonBit.ONE;
+            }
+
+            if (Keyboard.IsKeyDown(Key.D1) == true)
+            {
+                key |= (int)WiiController.ButtonBit.A;
+            }
+            if (Keyboard.IsKeyDown(Key.D2) == true)
+            {
+                key |= (int)WiiController.ButtonBit.B;
+            }
+            if (Keyboard.IsKeyDown(Key.Z) == true)
+            {
+                key |= (int)WiiController.ButtonBit.SHAKE;
+            }
+            return key;
+        }
+
+        /*
+        static private void setVJoyInput(PlayerController player)
+        {
+            bool res;
+            //button
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+                res = player.joystick.SetBtn(true, player.id, 5);
+            else
+                res = player.joystick.SetBtn(false, player.id, 5);
+
+            if (player.count % 50 == 0)
+            {
+                res = player.joystick.SetBtn(true, player.id, 1);
+            }
+            else
+            {
+                res = player.joystick.SetBtn(false, player.id, 1);
+            }
+
+            //analog stick
+            player.X += 150; if (player.X > player.maxval) player.X = 0;
+            player.Y += 250; if (player.Y > player.maxval) player.Y = 0;
+            player.Z += 350; if (player.Z > player.maxval) player.Z = 0;
+            player.XR += 220; if (player.XR > player.maxval) player.XR = 0;
+            player.ZR += 200; if (player.ZR > player.maxval) player.ZR = 0;
+            player.count++;
+
+            //if (player.count > 10000000)
+                //player.count = 0;
+
+        }
+        */
+        static private void setVJoyInput(PlayerController player,int key)
+        {
+            bool res;
+            for (int i = 0; i < 16; i++)
+            {
+                if (((key >> i) & 1) == 1)
+                {
+                    res = player.joystick.SetBtn(true, player.vjoyDeviceID, (uint)i + 1);
+                }
+                else
+                {
+                    res = player.joystick.SetBtn(false, player.vjoyDeviceID, (uint)i + 1);
+                }
+            }
+        }
+
+        static private void setVJoyInput(PlayerController player)
+        {
+            bool res;
+            int key = player.buttons;
+            for (int i = 0; i < 16; i++)
+            {
+                if (((key >> i) & 1) == 1)
+                {
+                    res = player.joystick.SetBtn(true, player.vjoyDeviceID, (uint)i + 1);
+                }
+                else
+                {
+                    res = player.joystick.SetBtn(false, player.vjoyDeviceID, (uint)i + 1);
+                }
+            }
+        }
+
+        static private void setVJoyInput(int key)
+        {
+            bool res;
+            PlayerController player = players[(key & 0xC0000000)>>31];
+            for (int i = 0; i < 16; i++)
+            {
+                if (((key >> i) & 1) == 1)
+                {
+                    res = player.joystick.SetBtn(true, player.vjoyDeviceID, (uint)i + 1);
+                }
+                else
+                {
+                    res = player.joystick.SetBtn(false, player.vjoyDeviceID, (uint)i + 1);
+                }
+            }
+
+        }
+
+        static private bool setupVjoyController(PlayerController player)
+        {
+
+            if (player.vjoyDeviceID <= 0 || player.vjoyDeviceID > 16)
+            {
+                Console.WriteLine("Illegal device ID {0}\nExit!", player.vjoyDeviceID);
+                return false;
             }
 
             // Get the driver attributes (Vendor ID, Product ID, Version Number)
-            if (!joystick.vJoyEnabled())
+            if (!player.joystick.vJoyEnabled())
             {
                 Console.WriteLine("vJoy driver not enabled: Failed Getting vJoy attributes.\n");
-                return;
+                return false;
             }
             else
-                Console.WriteLine("Vendor: {0}\nProduct :{1}\nVersion Number:{2}\n", joystick.GetvJoyManufacturerString(), joystick.GetvJoyProductString(), joystick.GetvJoySerialNumberString());
+                Console.WriteLine("Vendor: {0}\nProduct :{1}\nVersion Number:{2}\n", player.joystick.GetvJoyManufacturerString(), player.joystick.GetvJoyProductString(), player.joystick.GetvJoySerialNumberString());
 
 
 
+            GetStatusDevice(player);
+
+            TestIfMatchesDriver(player);
+
+            CheckContRanges(player);
+
+            PrintResult(player);
+
+            AquireTarget(player);
+
+   
+            return true;
+        }
+
+        static private bool GetStatusDevice(PlayerController player)
+        {
             // Get the state of the requested device
-            VjdStat status = joystick.GetVJDStatus(id);
-            switch (status)
+            bool isShow = false;
+            player.vJoyStatus = player.joystick.GetVJDStatus(player.vjoyDeviceID);
+            switch (player.vJoyStatus)
             {
                 case VjdStat.VJD_STAT_OWN:
-                    //Console.WriteLine("vJoy Device {0} is already owned by this feeder\n", id);
-                    MessageBox.Show("own");
+                    Console.WriteLine("vJoy Device {0} is already owned by this feeder\n", player.vjoyDeviceID);
+                    if(isShow)MessageBox.Show("own");
                     break;
                 case VjdStat.VJD_STAT_FREE:
-                    //Console.WriteLine("vJoy Device {0} is free\n", id);
-                    MessageBox.Show("free");
+                    Console.WriteLine("vJoy Device {0} is free\n", player.vjoyDeviceID);
+                    if (isShow) MessageBox.Show("free");
                     break;
                 case VjdStat.VJD_STAT_BUSY:
-                    //Console.WriteLine("vJoy Device {0} is already owned by another feeder\nCannot continue\n", id);
+                    Console.WriteLine("vJoy Device {0} is already owned by another feeder\nCannot continue\n", player.vjoyDeviceID);
                     MessageBox.Show("busy");
-                    return;
+                    return false;
                 case VjdStat.VJD_STAT_MISS:
-                    //Console.WriteLine("vJoy Device {0} is not installed or disabled\nCannot continue\n", id);
+                    Console.WriteLine("vJoy Device {0} is not installed or disabled\nCannot continue\n", player.vjoyDeviceID);
                     MessageBox.Show("miss");
-                    return;
+                    return false;
                 default:
-                    //Console.WriteLine("vJoy Device {0} general error\nCannot continue\n", id);
+                    Console.WriteLine("vJoy Device {0} general error\nCannot continue\n", player.vjoyDeviceID);
                     MessageBox.Show("def");
-                    return;
+                    return false;
             };
-
+            return true;
+        }
+        static private void CheckContRanges(PlayerController player)
+        {
             // Check which axes are supported
-            bool AxisX = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_X);
-            bool AxisY = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_Y);
-            bool AxisZ = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_Z);
-            bool AxisRX = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_RX);
-            bool AxisRZ = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_RZ);
+            bool AxisX = player.joystick.GetVJDAxisExist(player.vjoyDeviceID, HID_USAGES.HID_USAGE_X);
+            bool AxisY = player.joystick.GetVJDAxisExist(player.vjoyDeviceID, HID_USAGES.HID_USAGE_Y);
+            bool AxisZ = player.joystick.GetVJDAxisExist(player.vjoyDeviceID, HID_USAGES.HID_USAGE_Z);
+            bool AxisRX = player.joystick.GetVJDAxisExist(player.vjoyDeviceID, HID_USAGES.HID_USAGE_RX);
+            bool AxisRZ = player.joystick.GetVJDAxisExist(player.vjoyDeviceID, HID_USAGES.HID_USAGE_RZ);
+            player.setCheckAxisData(AxisX, AxisY, AxisZ, AxisRX, AxisRZ);
+
             // Get the number of buttons and POV Hat switchessupported by this vJoy device
-            int nButtons = joystick.GetVJDButtonNumber(id);
-            int ContPovNumber = joystick.GetVJDContPovNumber(id);
-            int DiscPovNumber = joystick.GetVJDDiscPovNumber(id);
+            int nButtons = player.joystick.GetVJDButtonNumber(player.vjoyDeviceID);
+            int ContPovNumber = player.joystick.GetVJDContPovNumber(player.vjoyDeviceID);
+            int DiscPovNumber = player.joystick.GetVJDDiscPovNumber(player.vjoyDeviceID);
+            player.setNumberOfButtons(nButtons, ContPovNumber, DiscPovNumber);
+        }
 
+        static private void PrintResult(PlayerController player)
+        {
             // Print results
-            Console.WriteLine("\nvJoy Device {0} capabilities:\n", id);
-            Console.WriteLine("Numner of buttons\t\t{0}\n", nButtons);
-            Console.WriteLine("Numner of Continuous POVs\t{0}\n", ContPovNumber);
-            Console.WriteLine("Numner of Descrete POVs\t\t{0}\n", DiscPovNumber);
-            Console.WriteLine("Axis X\t\t{0}\n", AxisX ? "Yes" : "No");
-            Console.WriteLine("Axis Y\t\t{0}\n", AxisX ? "Yes" : "No");
-            Console.WriteLine("Axis Z\t\t{0}\n", AxisX ? "Yes" : "No");
-            Console.WriteLine("Axis Rx\t\t{0}\n", AxisRX ? "Yes" : "No");
-            Console.WriteLine("Axis Rz\t\t{0}\n", AxisRZ ? "Yes" : "No");
+            Console.WriteLine("\nvJoy Device {0} capabilities:\n", player.vjoyDeviceID);
+            Console.WriteLine("Numner of buttons\t\t{0}\n", player.nButtons);
+            Console.WriteLine("Numner of Continuous POVs\t{0}\n", player.ContPovNumber);
+            Console.WriteLine("Numner of Descrete POVs\t\t{0}\n", player.DiscPovNumber);
+            Console.WriteLine("Axis X\t\t{0}\n", player.AxisX ? "Yes" : "No");
+            Console.WriteLine("Axis Y\t\t{0}\n", player.AxisX ? "Yes" : "No");
+            Console.WriteLine("Axis Z\t\t{0}\n", player.AxisX ? "Yes" : "No");
+            Console.WriteLine("Axis Rx\t\t{0}\n", player.AxisRX ? "Yes" : "No");
+            Console.WriteLine("Axis Rz\t\t{0}\n", player.AxisRZ ? "Yes" : "No");
+        }
 
+        static private bool TestIfMatchesDriver(PlayerController player)
+        {
             // Test if DLL matches the driver
             UInt32 DllVer = 0, DrvVer = 0;
-            bool match = joystick.DriverMatch(ref DllVer, ref DrvVer);
+            bool match = player.joystick.DriverMatch(ref DllVer, ref DrvVer);
             if (match)
-                Console.WriteLine("Version of Driver Matches DLL Version ({0:X})\n", DllVer);
-            else
-                Console.WriteLine("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n", DrvVer, DllVer);
-
-            MessageBox.Show(DllVer + "," + DrvVer);
-
-            // Acquire the target
-            if ((status == VjdStat.VJD_STAT_OWN) || ((status == VjdStat.VJD_STAT_FREE) && (!joystick.AcquireVJD(id))))
             {
-                Console.WriteLine("Failed to acquire vJoy device number {0}.\n", id);
-                return;
+                Console.WriteLine("Version of Driver Matches DLL Version ({0:X})\n", DllVer);
+                return true;
             }
             else
-                Console.WriteLine("Acquired: vJoy device number {0}.\n", id);
+            {
+                Console.WriteLine("Version of Driver ({0:X}) does NOT match DLL Version ({1:X})\n", DrvVer, DllVer);
+                return false;
+            }
+        }
+
+        static private bool AquireTarget(PlayerController player)
+        {
+            // Acquire the target
+            if ((player.vJoyStatus == VjdStat.VJD_STAT_OWN) || ((player.vJoyStatus == VjdStat.VJD_STAT_FREE) && (!player.joystick.AcquireVJD(player.vjoyDeviceID))))
+            {
+                Console.WriteLine("Failed to acquire vJoy device number {0}.\n", player.vjoyDeviceID);
+                return false;
+            }
+            else
+                Console.WriteLine("Acquired: vJoy device number {0}.\n", player.vjoyDeviceID);
 
             Console.WriteLine("\npress enter to stat feeding");
-            //Console.ReadKey(true);
-
-            int X, Y, Z, ZR, XR;
-            uint count = 0;
-            long maxval = 0;
-
-            X = 20;
-            Y = 30;
-            Z = 40;
-            XR = 60;
-            ZR = 80;
-
-            joystick.GetVJDAxisMax(id, HID_USAGES.HID_USAGE_X, ref maxval);
-            MessageBox.Show(maxval + "");
-            joystick.GetVJDAxisMin(id, HID_USAGES.HID_USAGE_X, ref maxval);
-            MessageBox.Show(maxval + "");
-            bool res;
-            // Reset this device to default values
-            //joystick.ResetVJD(id);
-            //joystick.ResetAll();
-
-            //reset button
-            for(uint i=0; i<nButtons; i++)
-            {
-                res = joystick.SetBtn(false, id, 1+i);
-            }
-
-            for(uint i=0; i < ContPovNumber; i++)
-            {
-                res = joystick.SetContPov(0, id, 1+i);
-            }
-            for (uint i = 0; i < DiscPovNumber; i++)
-            {
-                res = joystick.SetDiscPov(0, id, 1 + i);
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // Feed the device in endless loop
-            while (true)
-            {
-                // Set position of 4 axes
-
-                res = joystick.SetAxis(X, id, HID_USAGES.HID_USAGE_X);
-                //res = joystick.SetAxis(Y, id, HID_USAGES.HID_USAGE_Y);
-                //res = joystick.SetAxis(Z, id, HID_USAGES.HID_USAGE_Z);
-                //res = joystick.SetAxis(XR, id, HID_USAGES.HID_USAGE_RX);
-                //res = joystick.SetAxis(ZR, id, HID_USAGES.HID_USAGE_RZ);
-
-                // Press/Release Buttons
-                //res = joystick.SetBtn(true, id, count / 50);
-                //res = joystick.SetBtn(false, id, 1 + count / 50);
-                //res = joystick.SetBtn(false, id, 5);
-
-                // If Continuous POV hat switches installed - make them go round
-                // For high values - put the switches in neutral state
-                if (ContPovNumber > 0)
-                {
-                    if ((count * 70) < 30000)
-                    {
-                        res = joystick.SetContPov(((int)count * 70), id, 1);
-                        res = joystick.SetContPov(((int)count * 70) + 2000, id, 2);
-                        //res = joystick.SetContPov(((int)count * 70) + 4000, id, 3);
-                        //res = joystick.SetContPov(((int)count * 70) + 6000, id, 4);
-                    }
-                    else
-                    {
-                        res = joystick.SetContPov(-1, id, 1);
-                        res = joystick.SetContPov(-1, id, 2);
-                        //res = joystick.SetContPov(-1, id, 3);
-                        //res = joystick.SetContPov(-1, id, 4);
-                    };
-                };
-
-                // If Discrete POV hat switches installed - make them go round
-                // From time to time - put the switches in neutral state
-                if (DiscPovNumber > 0)
-                {
-                    if (count < 550)
-                    {
-                        joystick.SetDiscPov((((int)count / 20) + 0) % 4, id, 1);
-                        joystick.SetDiscPov((((int)count / 20) + 1) % 4, id, 2);
-                        //joystick.SetDiscPov((((int)count / 20) + 2) % 4, id, 3);
-                        //joystick.SetDiscPov((((int)count / 20) + 3) % 4, id, 4);
-                    }
-                    else
-                    {
-                        joystick.SetDiscPov(-1, id, 1);
-                        joystick.SetDiscPov(-1, id, 2);
-                        //joystick.SetDiscPov(-1, id, 3);
-                        //joystick.SetDiscPov(-1, id, 4);
-                    };
-                };
-
-
-                if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
-                    res = joystick.SetBtn(true, id, 5);
-                else
-                    res = joystick.SetBtn(false, id, 5);
-
-                if (count % 100 == 0)
-                {
-                    res = joystick.SetBtn(true, id, 1);
-                }
-                else
-                {
-                    res = joystick.SetBtn(false, id, 1);
-                }
-
-
-
-                System.Threading.Thread.Sleep(20);
-                X += 150; if (X > maxval) X = 0;
-                Y += 250; if (Y > maxval) Y = 0;
-                Z += 350; if (Z > maxval) Z = 0;
-                XR += 220; if (XR > maxval) XR = 0;
-                ZR += 200; if (ZR > maxval) ZR = 0;
-                count++;
-
-                if (count > 640)
-                    count = 0;
-
-                Application.DoEvents();
-
-            } // While (Robust)
-
-
-
+            return true;
         }
+
 
     }
 

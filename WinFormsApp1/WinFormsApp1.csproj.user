@@ -2,13 +2,13 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="Form1.cs">
+    <Compile Update="AudienceSeat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Form2.cs">
+    <Compile Update="Form\AddPlayerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="showInput.cs">
+    <Compile Update="Form\MainFrom.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
