@@ -20,6 +20,7 @@ namespace WinFormsApp1
 
         //コントローラー情報
         public int playerNum = 0;
+        public string UUID = "";
         public Platform platform;
         public enum Platform
         {
@@ -50,12 +51,13 @@ namespace WinFormsApp1
         //スティック
         public JoyStick[] sticks;
 
-        public PlayerController(uint vid,string name, Platform plt)
+        public PlayerController(uint vid,string name, Platform plt,string uuid)
         {
             this.vjoyDeviceID = vid;
             this.playerNum = (int)vid;
             this.playerName = name;
             this.platform = plt;
+            this.UUID = uuid;
             this.status = PlayerStatus.ONLINE;
         }
 
@@ -174,11 +176,12 @@ namespace WinFormsApp1
 
         public string showVerboseDetail()
         {
-
-            string str = String.Format("PlayerNum : {0}\r\nPlayerName : {5}\r\n" +
+            string str = String.Format("PlayerNum : {0}\r\n" +
+                "PlayerName : {5}\r\n" +
                 "VjoyDeviceID : {1}\r\n" +
-                "ControllerPlatform : {2}\r\nMaxButtonNum : {3}\r\n" +
-                "Input : {4}",playerNum,vjoyDeviceID,platform,nButtons,InputToString(),playerName);
+                "ControllerPlatform : {2}\r\n" +
+                "UUID : {3}\r\n" +
+                "Input : {4}",playerNum,vjoyDeviceID,platform,UUID,InputToString(),playerName);
             return str;
         }
         public string getStatus()

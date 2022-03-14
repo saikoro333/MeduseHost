@@ -50,6 +50,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.testNOtifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -285,7 +286,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.connectSeverToolStripMenuItem,
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem1,
+            this.testNOtifyToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -320,6 +322,13 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(100, 17);
             this.toolStripStatusLabel1.Text = "Selected player is ";
+            // 
+            // testNOtifyToolStripMenuItem
+            // 
+            this.testNOtifyToolStripMenuItem.Name = "testNOtifyToolStripMenuItem";
+            this.testNOtifyToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
+            this.testNOtifyToolStripMenuItem.Text = "test NOtify";
+            this.testNOtifyToolStripMenuItem.Click += new System.EventHandler(this.testNOtifyToolStripMenuItem_Click);
             // 
             // MainFrom
             // 
@@ -387,5 +396,6 @@
         private ToolStripMenuItem connectSeverToolStripMenuItem;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripMenuItem testNOtifyToolStripMenuItem;
     }
 }

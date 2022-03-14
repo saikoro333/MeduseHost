@@ -8,12 +8,35 @@
     ".NETCoreApp,Version=v6.0": {
       "WinFormsApp1/1.0.0": {
         "dependencies": {
+          "Notification.Wpf": "6.0.0",
           "System.IO.Ports": "6.0.0",
           "System.Management": "6.0.0",
           "vJoyInterfaceWrap": "0.2.1.6"
         },
         "runtime": {
           "WinFormsApp1.dll": {}
+        }
+      },
+      "Microsoft.DependencyValidation.Analyzers/0.11.0": {},
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.37": {
+        "runtime": {
+          "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.37.31167"
+          }
+        }
+      },
+      "Notification.Wpf/6.0.0": {
+        "dependencies": {
+          "Microsoft.DependencyValidation.Analyzers": "0.11.0",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.37",
+          "System.ValueTuple": "4.5.0"
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/Notification.Wpf.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.0"
+          }
         }
       },
       "runtime.linux-arm.runtime.native.System.IO.Ports/6.0.0": {
@@ -115,6 +138,7 @@
           }
         }
       },
+      "System.ValueTuple/4.5.0": {},
       "vJoyInterfaceWrap/0.2.1.6": {
         "runtime": {
           "vJoyInterfaceWrap.dll": {
@@ -130,6 +154,27 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Microsoft.DependencyValidation.Analyzers/0.11.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3xBVhMsM4o9cDpsvmlv78T1FG+cTH8i6bjl1Irk6hoIwEc6Ekoz4mKAR6Hn5M/2G2ZsHNrYBNwGkgF7aiw74UA==",
+      "path": "microsoft.dependencyvalidation.analyzers/0.11.0",
+      "hashPath": "microsoft.dependencyvalidation.analyzers.0.11.0.nupkg.sha512"
+    },
+    "Microsoft.Xaml.Behaviors.Wpf/1.1.37": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TxH7g5I/4UzOHfs0GqD1W4evdl7DIHOQCr/KWc4G4BkgtsAhaHHXAW5JbKrkB7cqClN0JYOX6j9/4v4emCjFIA==",
+      "path": "microsoft.xaml.behaviors.wpf/1.1.37",
+      "hashPath": "microsoft.xaml.behaviors.wpf.1.1.37.nupkg.sha512"
+    },
+    "Notification.Wpf/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-02JvazSZZz9jJxRdORYSKAZBRregPg3qEmV1PqCHlfHEGBWWz9fDYziCNkjOMQuEt4Uj6PVitZfLp+Npa189oA==",
+      "path": "notification.wpf/6.0.0",
+      "hashPath": "notification.wpf.6.0.0.nupkg.sha512"
     },
     "runtime.linux-arm.runtime.native.System.IO.Ports/6.0.0": {
       "type": "package",
@@ -193,6 +238,13 @@
       "sha512": "sha512-sHsESYMmPDhQuOC66h6AEOs/XowzKsbT9srMbX71TCXP58hkpn1BqBjdmKj1+DCA/WlBETX1K5WjQHwmV0Txrg==",
       "path": "system.management/6.0.0",
       "hashPath": "system.management.6.0.0.nupkg.sha512"
+    },
+    "System.ValueTuple/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ==",
+      "path": "system.valuetuple/4.5.0",
+      "hashPath": "system.valuetuple.4.5.0.nupkg.sha512"
     },
     "vJoyInterfaceWrap/0.2.1.6": {
       "type": "reference",

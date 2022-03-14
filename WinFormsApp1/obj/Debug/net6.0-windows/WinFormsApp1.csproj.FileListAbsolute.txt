@@ -63,3 +63,5 @@ C:\Users\TAKAHASHI\source\repos\rhost\WinFormsApp1\obj\Debug\net6.0-windows\WinF
 C:\Users\TAKAHASHI\source\repos\rhost\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.AddPlayerForm.resources
 C:\Users\TAKAHASHI\source\repos\rhost\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.MainFrom.resources
 C:\Users\TAKAHASHI\source\repos\rhost\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.AudienceSeat.resources
+C:\Users\TAKAHASHI\source\repos\rhost\WinFormsApp1\bin\Debug\net6.0-windows\Microsoft.Xaml.Behaviors.dll
+C:\Users\TAKAHASHI\source\repos\rhost\WinFormsApp1\bin\Debug\net6.0-windows\Notification.Wpf.dll

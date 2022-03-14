@@ -1,9 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "gddFqoHq7Sscn0PtKPTbt4q84iP4MwXZOvEOzzoJCnogDixNp5X83EQ8/kLeSA0x+CkT8Z2kbI8AhntErUBsYA==",
+  "dgSpecHash": "vwydcynMT1TBvzU+cn3AhYD1uoKnsb/J0dL/sXBBEsDSRzHeNYkvKigu6sgZEpWV7X/WMyyn7ZU1J5+Uabgviw==",
   "success": true,
   "projectFilePath": "C:\\Users\\TAKAHASHI\\source\\repos\\rhost\\WinFormsApp1\\WinFormsApp1.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\microsoft.toolkit.uwp.notifications\\7.1.2\\microsoft.toolkit.uwp.notifications.7.1.2.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\TAKAHASHI\\.nuget\\packages\\runtime.linux-arm.runtime.native.system.io.ports\\6.0.0\\runtime.linux-arm.runtime.native.system.io.ports.6.0.0.nupkg.sha512",
     "C:\\Users\\TAKAHASHI\\.nuget\\packages\\runtime.linux-arm64.runtime.native.system.io.ports\\6.0.0\\runtime.linux-arm64.runtime.native.system.io.ports.6.0.0.nupkg.sha512",
     "C:\\Users\\TAKAHASHI\\.nuget\\packages\\runtime.linux-x64.runtime.native.system.io.ports\\6.0.0\\runtime.linux-x64.runtime.native.system.io.ports.6.0.0.nupkg.sha512",
@@ -11,8 +15,14 @@
     "C:\\Users\\TAKAHASHI\\.nuget\\packages\\runtime.osx-arm64.runtime.native.system.io.ports\\6.0.0\\runtime.osx-arm64.runtime.native.system.io.ports.6.0.0.nupkg.sha512",
     "C:\\Users\\TAKAHASHI\\.nuget\\packages\\runtime.osx-x64.runtime.native.system.io.ports\\6.0.0\\runtime.osx-x64.runtime.native.system.io.ports.6.0.0.nupkg.sha512",
     "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
     "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.io.ports\\6.0.0\\system.io.ports.6.0.0.nupkg.sha512",
-    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.management\\6.0.0\\system.management.6.0.0.nupkg.sha512"
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.management\\6.0.0\\system.management.6.0.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
+    "C:\\Users\\TAKAHASHI\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.17763.21\\microsoft.windows.sdk.net.ref.10.0.17763.21.nupkg.sha512"
   ],
   "logs": []
 }

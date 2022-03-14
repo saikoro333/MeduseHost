@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//https://qiita.com/ambleside138/items/2a5ae64afcf094261fa1
+using Microsoft.Toolkit.Uwp.Notifications;
+
 namespace WinFormsApp1
 {
     public partial class MainFrom : Form
@@ -166,8 +169,17 @@ namespace WinFormsApp1
 
         private void button3_Click(object sender, EventArgs e)
         {
-            AudienceSeat seat = new AudienceSeat();
+            AudienceSeat seat = new AudienceSeat(this.hostControl);
             seat.Show();
+        }
+
+        private void testNOtifyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ToastContentBuilder()
+       .AddText("自作アプリからの通知です！")
+       .AddText("ボタン押下時に即時トースト通知が発行されます。")
+       .Show();
+
         }
     }
 }

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using vJoyInterfaceWrap;
 using System.Windows.Input;
+using Microsoft.Toolkit.Uwp.Notifications;
+using System.Timers;
+
 
 namespace WinFormsApp1
 {
@@ -12,28 +15,22 @@ namespace WinFormsApp1
     {
         public const int MAX_PLAYER_NUM = 4;
         public const int WAIT_MSECOND = 15;
+        public const int CHECK_AUDIENCE_SPAN_MS = 8000;
 
         public PlayerController[] players = new PlayerController[MAX_PLAYER_NUM];
+        public AudienceSeat.AudienceData[] audienceList = new AudienceSeat.AudienceData[AudienceSeat.SEAT_NUM];
         public int currEntryCount = 0;
+        public int audienceCount = 0;
 
         private MainFrom form;
+        private System.Timers.Timer timer = new System.Timers.Timer(CHECK_AUDIENCE_SPAN_MS);
 
         public void Initial()
         {
             form = new MainFrom(this);
             form.Show();
-            /*
-            uint playernum = 1;
-            bool flag = this.createPlayer(playernum, null,PlayerController.Platform.Wii);
-            if (!flag)
-            {
-                MessageBox.Show("Cannot establish VjoyDevice_" + playernum + " ...");
-            }
-            else
-            {
-                this.mainLoop();
-            }
-            */
+            this.InitialTimer();
+
             this.mainLoop();
         }
 
@@ -69,9 +66,11 @@ namespace WinFormsApp1
             if (name == null || name.Equals(String.Empty))
                 name = "Player" + playernum;
 
+            string uuid = "UUID-" + playernum + "-" + name;
+
             if (players[playernum - 1] == null)
             {
-                PlayerController player = new PlayerController(playernum,name, plt);
+                PlayerController player = new PlayerController(playernum,name, plt,uuid);
                 player.joystick = new vJoy();
                 bool isCorrect = VjoyControllerSetting.setupVjoyController(player);
                 if (isCorrect)
@@ -94,6 +93,14 @@ namespace WinFormsApp1
             return false;
         }
 
+        public void InitialAudienceList()
+        {
+            for(int i = 0; i < AudienceSeat.SEAT_NUM; i++)
+            {
+                var ad = new AudienceSeat.AudienceData();
+                this.audienceList[i] = ad;
+            }
+        }
 
         private int getKeybordInput()
         {
@@ -145,10 +152,22 @@ namespace WinFormsApp1
             {
                 if(this.players[i] == null)
                 {
-                    return i;
+                    return i+1;
                 }
             }
             return -1;
+        }
+
+        private void InitialTimer()
+        {
+            this.timer.Elapsed += (sender, e) =>
+            {
+                new ToastContentBuilder()
+           .AddText("Meduse-Hostからの通知")
+           .AddText("観客席の更新を行いました。")
+           .Show();
+            };
+            this.timer.Start();
         }
 
 
